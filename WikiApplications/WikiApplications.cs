@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -41,6 +41,7 @@ namespace WikiApplications
         public void clearTexts()
         {
             textBoxName.Clear();
+            comboBoxCategory.Items.Clear(); // Unselects one of the options (Might not work if so delete)
             textBoxDefinition.Clear();
             textBoxSearch.Clear();
         }
@@ -157,16 +158,23 @@ namespace WikiApplications
 
         //6.5 Create a custom ValidName method which will take a parameter string value from the Textbox Name and returns a Boolean after checking for duplicates.
         // Use the built in List<T> method “Exists” to answer this requirement.
-        private bool ValidName()
+        private bool ValidName(string checkThisName)
         {
-            bool duplicate = false;
-            //for (int i = 0; i < row; i++)
-            //{
-            //    if (string.Equals(WikiList[i, 0], textBoxName.Text)
-            //        && string.Equals(WikiList[i, 1], groupBoxStructure.)
-            //}
+            if (Wiki.Exists(duplicate => duplicate.Equals(checkThisName)))
+                return false;
+            else
+                return true;
 
-            return duplicate;
+
+
+            //bool duplicate = false;
+            ////for (int i = 0; i < row; i++)
+            ////{
+            ////    if (string.Equals(WikiList[i, 0], textBoxName.Text)
+            ////        && string.Equals(WikiList[i, 1], groupBoxStructure.)
+            ////}
+
+            //return duplicate;
         }
 
         private void WikiApplications_Load(object sender, EventArgs e)
