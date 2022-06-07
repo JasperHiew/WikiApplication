@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 
 // 6.1 Create a separate class file to hold the four data items of the Data Structure (use the Data Structure Matrix as a guide).
@@ -11,10 +12,24 @@ namespace WikiApplications
 {
     class Information
     {
-        public string Name { get; set; }
-        public string Category { get; set; }
-        public string Structure { get; set; }
-        public string Definition { get; set; }
+        //public string Name { get; set; }
+        //public string Category { get; set; }
+        //public string Structure { get; set; }
+        //public string Definition { get; set; }
+
+        private string Name;
+        private string Category;
+        private string Structure;
+        private string Definition;
+        public Information() { }
+
+        public Information (string newName, string newCategory, string newStructure, string newDefinition)
+        {
+            Name = newName;
+            Category = newCategory;
+            Structure = newStructure;
+            Definition = newDefinition;
+        }
 
         public void setName (string newName)
         {
@@ -56,9 +71,12 @@ namespace WikiApplications
             return Definition;
         }
 
-        public string displayInfo()
+        public ListViewItem displayInfo()
         {
-            return getName();         
+            ListViewItem lvi = new ListViewItem(getName());
+            lvi.SubItems.Add(getCategory());
+            return lvi;
         }
     }
 }
+
