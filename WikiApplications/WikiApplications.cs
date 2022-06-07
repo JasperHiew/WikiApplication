@@ -25,12 +25,20 @@ namespace WikiApplications
 
         // 6.2 Create a global List<T> of type Information called Wiki.
         List<Information> Wiki = new List<Information>();
+        // 6.4 Create and initialise a global string array with the six categories as indicated in the Data Structure Matrix.
+        string[] categoryWiki = new string[] {"Array", "Abstract", "Graph", "Hash", "List", "Tree"};
+
+        string defaultFileName = "definitions.dat";
+
+        int counter = 0;
 
         public void displayArray()
         {
-            listViewOutput.Items.Clear();
-            foreach (Information info in Wiki)
+            //listViewOutput.Items.Clear();
+            listViewOutput.Sort();
+            foreach (var information in Wiki)
             {
+                listViewOutput.Items.Add(information.displayInfo());
                 // Use the subItems from your WikiDataSearch
                 //Items.Add(information.displayInfo());
                 //.Items;
@@ -41,38 +49,81 @@ namespace WikiApplications
         public void clearTexts()
         {
             textBoxName.Clear();
-            comboBoxCategory.Items.Clear(); // Unselects one of the options (Might not work if so delete)
+            //comboBoxCategory.Items.Clear(); // Unselects one of the options (Might not work if so delete)
+            comboBoxCategory.Text = "";
+            //groupBoxStructure.Text = "";
             textBoxDefinition.Clear();
             textBoxSearch.Clear();
-        }
-        // Radio Button (Might not work so delete later if it doesn't)
-        private String getSelected()
-        {
-            if(radioButtonLinear.Checked)
+            // Unchecks radio buttons (Works)
+            if (radioButtonLinear.Checked)
             {
-                return "Linear";
-            } 
-            else if (radioButtonNonLinear.Checked) 
-            {
-                return "Non Linear";
+                radioButtonLinear.Checked = false;
             }
-            return "None";
+
+            if (radioButtonNonLinear.Checked)
+            {
+                radioButtonNonLinear .Checked = false;  
+            }
+        }
+
+        private void sortArray()
+        {
+            //for (int i = 0; i )
+        }
+
+        // 6.6 Create two methods to highlight and return the values from the Radio button GroupBox.
+        // The first method must return a string value from the selected radio button (Linear or Non-Linear). 
+        // Radio Button (Might not work so delete later if it doesn't)
+        private String radioButtonSelected()
+        {
+            string value = "";
+            if (radioButtonLinear.Checked)
+            {
+                value = radioButtonLinear.Text;
+                return "Linear";
+            }
+            else
+            {
+                radioButtonNonLinear.Checked = true;
+                value = radioButtonNonLinear.Text;
+                return "Non-Linear";
+            }
+        }
+        // The second method must send an integer index which will highlight an appropriate radio button.
+        private void radioButtonHighligh(int radio)
+        {
+            if (radio == 0)
+            {
+                radioButtonLinear.Checked = true;
+            } 
+            else
+            {
+                radioButtonNonLinear.Checked = true;
+            }
         }
         
+        private void fillComboBox()
+        {
+            for (int i = 0; i < categoryWiki.Length; i++)
+            {
+                categoryWiki[i].ToString();
+            }
+            comboBoxCategory.Items.AddRange(categoryWiki);
+        }
 
         // 6.3 Create a button method to ADD a new item to the list. Use a TextBox for the Name input, ComboBox for the Category,
         // Radio group for the Structure and Multiline TextBox for the Definition.
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            //Wiki.Add(textBoxName.Text);
-            //Wiki.Add(radioButtonLinear.Checked);
-            //Wiki.Add(textBoxDefinition.Text);
+
             Information newInfo = new Information();
             newInfo.setName(textBoxName.Text);
-            newInfo.setCategory(comboBoxCategory.Text.ToString());
-            //newInfo.setStructure(radioButtonLinear.Checked.ToString() || radioButtonNonLinear.Checked.ToString());
+            newInfo.setCategory(comboBoxCategory.Text);
+            newInfo.setStructure(radioButtonSelected());
             newInfo.setDefinition(textBoxDefinition.Text);
+
             Wiki.Add(newInfo);
+            counter++;
             clearTexts();
             displayArray();
         }
@@ -160,7 +211,7 @@ namespace WikiApplications
         // Use the built in List<T> method “Exists” to answer this requirement.
         private bool ValidName(string checkThisName)
         {
-            if (Wiki.Exists(duplicate => duplicate.Equals(checkThisName)))
+            if (Wiki.Exists(dup => dup.getName() == checkThisName))
                 return false;
             else
                 return true;
@@ -177,11 +228,12 @@ namespace WikiApplications
             //return duplicate;
         }
 
-        private void WikiApplications_Load(object sender, EventArgs e)
+        private void WikiApplications_Load(object sender, EventArgs e)       
         {
-            listViewOutput.View = View.Details;
+            fillComboBox();
+            //listViewOutput.View = View.Details;
 
-            radioButtonLinear.Checked = true;
+            //radioButtonLinear.Checked = true;
         }
     }
 }
