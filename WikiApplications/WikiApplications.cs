@@ -17,6 +17,13 @@ namespace WikiApplication
         public WikiApplication()
         {
             InitializeComponent();
+
+            Stream traceFiles = File.Create("TraceFile.txt");
+            TextWriterTraceListener traceListener = new TextWriterTraceListener(traceFiles);
+            Trace.Listeners.Add(traceListener);
+            Trace.AutoFlush = true;
+            Trace.WriteLine("Trace debug commencing...");
+            Trace.WriteLine("");
         }
 
         // 6.2 Create a global List<T> of type Information called Wiki.
@@ -28,6 +35,10 @@ namespace WikiApplication
 
         string defaultFileName = "definitions.bin";
 
+
+
+
+
         // 6.9 Create a single custom method that will sort and then display the Name and Category from the wiki information in the list.
         public void displayArray()
         {
@@ -38,6 +49,7 @@ namespace WikiApplication
             {
                 listViewOutput.Items.Add(information.displayInfo());
             }
+            Trace.WriteLine("Sorted and Displaying");
         }
 
         private void resetHighlight()
@@ -47,6 +59,7 @@ namespace WikiApplication
                 listViewOutput.Items[i].ForeColor = Color.Black;
                 listViewOutput.Items[i].BackColor = Color.White;
             }
+            Trace.WriteLine("Highlight reset");
         }
         // 6.12 Create a custom method that will clear and reset the TextBboxes, ComboBox and Radio button
         private void clearTexts()
@@ -57,6 +70,7 @@ namespace WikiApplication
             radioButtonNonLinear.Checked = false;
             textBoxDefinition.Clear();
             textBoxSearch.Clear();
+            Trace.WriteLine("Textboxes = Cleared");
         }
 
         // 6.5 Create a custom ValidName method which will take a parameter string value from the Textbox Name and returns a Boolean after checking for duplicates.
@@ -65,10 +79,12 @@ namespace WikiApplication
         {
             if (!Wiki.Exists(dup => dup.GetName() == checkThisName))
             {
+                Trace.WriteLine("ValidName = true");
                 return true;
             }
             else
             {
+                Trace.WriteLine("ValidName = false");
                 MessageBox.Show("Invalid name. Cannot have the same name in list twice.");
                 return false;
             }
@@ -82,11 +98,13 @@ namespace WikiApplication
             //string value = "";
             if (radioButtonLinear.Checked)
             {
+                Trace.WriteLine("RadioButtonLinear = Checked");
                 //value = radioButtonLinear.Text;
                 return "Linear";
             }
             else
             {
+                Trace.WriteLine("RadioButtonNonLinear = Checked");
                 //radioButtonNonLinear.Checked = true;
                 //value = radioButtonNonLinear.Text;
                 return "Non-Linear";
@@ -98,10 +116,12 @@ namespace WikiApplication
         {
             if (radio == 0)
             {
+                Trace.WriteLine("RadioButton = Checked");
                 radioButtonLinear.Checked = true;
             }
             else
             {
+                Trace.WriteLine("RadioButton = Not Checked");
                 radioButtonNonLinear.Checked = true;
             }
         }
@@ -120,15 +140,18 @@ namespace WikiApplication
         private void listViewOutput_Click(object sender, EventArgs e)
         {
             int currentWiki = listViewOutput.SelectedIndices[0];
+            Trace.WriteLine("Current Index: " + currentWiki + " is clicked");
             textBoxName.Text = Wiki[currentWiki].GetName();
             comboBoxCategory.Text = Wiki[currentWiki].getCategory();
             if (Wiki[currentWiki].getStructure() == "Linear")
             {
                 radioButtonHighlight(0);
+                Trace.WriteLine("RadioButtonLinear = Checked");
             }
             else
             {
                 radioButtonHighlight(1);
+                Trace.WriteLine("RadioButtonNonLinear = Checked");
             }
             textBoxDefinition.Text = Wiki[currentWiki].getDefinition();
         }
@@ -155,7 +178,6 @@ namespace WikiApplication
                         clearTexts();
                         displayArray();
 
-                        MessageBox.Show("Record added.");
                     }
                 }
                 else
@@ -177,6 +199,7 @@ namespace WikiApplication
             try
             {
                 int deleteWiki = listViewOutput.SelectedIndices[0];
+                Trace.WriteLine("deleteWiki(Current Item): " + deleteWiki);
                 if (deleteWiki >= 0)
                 {
                     DialogResult dialogResult = MessageBox.Show("Would you like to delete this wiki record",
@@ -188,7 +211,7 @@ namespace WikiApplication
                         clearTexts();
                         displayArray();
 
-                        MessageBox.Show("Wiki record has been deleted.");
+
                     }
                     else
                     {
@@ -225,7 +248,7 @@ namespace WikiApplication
                             Wiki[editWiki].setStructure(radioButtonSelected());
                             Wiki[editWiki].setDefinition(textBoxDefinition.Text);
 
-                            MessageBox.Show("Updated Wiki.");
+
                             clearTexts();
                             displayArray();
                         }
@@ -290,6 +313,7 @@ namespace WikiApplication
                 openRecord(openFileDialog.FileName);
                 displayArray();
             }
+            Trace.WriteLine("Opening bin file");
         }
 
         public void openRecord (string openFileName)
@@ -337,6 +361,7 @@ namespace WikiApplication
             {
                 saveRecord(defaultFileName);
             }
+            Trace.WriteLine("Save bin file");
         }
 
         private void saveRecord(string saveFileName)
@@ -389,6 +414,7 @@ namespace WikiApplication
                         }
                     }
                 }
+                Trace.WriteLine("Wiki application records opening");
                 displayArray();
             }
 
