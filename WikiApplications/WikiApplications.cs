@@ -10,6 +10,12 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.IO;
 
+// Jasper Hiew
+// Student ID: 30043293
+// Date 03/04/2022
+// Function: The function of this program is to store inputted data from the user into a list and be able to save it in binary file to be used later.
+// The user can also add, edit and delete any item from the list and be able to search from the list as well.
+
 namespace WikiApplication
 {
     public partial class WikiApplication : Form
@@ -59,7 +65,7 @@ namespace WikiApplication
                 listViewOutput.Items[i].ForeColor = Color.Black;
                 listViewOutput.Items[i].BackColor = Color.White;
             }
-            Trace.WriteLine("Highlight reset");
+            //Trace.WriteLine("Searched item hightlighted");
         }
         // 6.12 Create a custom method that will clear and reset the TextBboxes, ComboBox and Radio button
         private void clearTexts()
@@ -156,15 +162,18 @@ namespace WikiApplication
             textBoxDefinition.Text = Wiki[currentWiki].getDefinition();
         }
 
+        // 6.3 Create a button method to ADD a new item to the list.
+        // Use a TextBox for the Name input, ComboBox for the Category, Radio group for the Structure and Multiline TextBox for the Definition.
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(textBoxName.Text) &&
                 !string.IsNullOrWhiteSpace(textBoxDefinition.Text))
             {
                 var dialogResult = MessageBox.Show("Add new wiki record?", "Add wiki record", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-
+                
                 if (dialogResult == DialogResult.OK)
                 {
+                    Trace.WriteLine("Confirmation to add item to listview"); 
                     if (ValidName(textBoxName.Text))
                     {
                         resetHighlight();
@@ -175,6 +184,7 @@ namespace WikiApplication
                         newInfo.setDefinition(textBoxDefinition.Text);
                         Wiki.Add(newInfo);
 
+                        Trace.WriteLine("Added item: " + textBoxName.Text);
                         clearTexts();
                         displayArray();
 
@@ -183,11 +193,13 @@ namespace WikiApplication
                 else
                 {
                     MessageBox.Show("Record NOT added.");
+                    Trace.WriteLine(textBoxName.Text + " was not added");
                 }
             }
             else
             {
                 MessageBox.Show("Please fill out the necessary boxes on the left-side to add a record.");
+                Trace.WriteLine("Boxes aren't filled out");
             }
         }
 
@@ -206,6 +218,7 @@ namespace WikiApplication
                            "Click 'Yes' to proceed with the deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (dialogResult == DialogResult.Yes)
                     {
+                        Trace.WriteLine("Confirmed to delete an item");
                         Wiki.RemoveAt(deleteWiki);
 
                         clearTexts();
@@ -216,12 +229,14 @@ namespace WikiApplication
                     else
                     {
                         MessageBox.Show("Wiki record has NOT been deleted.");
+                        Trace.WriteLine(deleteWiki + "has not been deleted");
                     }
                 }
             } 
             catch (Exception)
             {
                 MessageBox.Show("Please select wiki record to delete.");
+                Trace.WriteLine("No records have been selected to be deleted");
                 clearTexts();
             }
         }
@@ -241,6 +256,7 @@ namespace WikiApplication
 
                     if (dialogResult == DialogResult.OK)
                     {
+                        Trace.WriteLine("Confirmed to edit");
                         if (ValidName(textBoxName.Text))
                         {
                             Wiki[editWiki].setName(textBoxName.Text);
@@ -248,7 +264,7 @@ namespace WikiApplication
                             Wiki[editWiki].setStructure(radioButtonSelected());
                             Wiki[editWiki].setDefinition(textBoxDefinition.Text);
 
-
+                            Trace.WriteLine("Index: " + editWiki + " was edited");
                             clearTexts();
                             displayArray();
                         }
@@ -256,12 +272,14 @@ namespace WikiApplication
                     else
                     {
                         MessageBox.Show("Current wiki record has NOT been updated.");
+                        Trace.WriteLine("No edits have been made");
                     }
                 }
             } 
             catch (Exception)
             {
                 MessageBox.Show("Select a wiki record from the list to edit.");
+                Trace.WriteLine("No options have been selected from edits");
                 clearTexts();
             }
         }
@@ -286,17 +304,34 @@ namespace WikiApplication
                     listViewOutput.Items[binarySearch].ForeColor = Color.White;
 
                     MessageBox.Show(textBoxSearch.Text + " Found.");
-                    clearTexts();
+                    Trace.WriteLine(textBoxSearch.Text + " Found");
+
+                    int currentWiki = binarySearch;
+                    textBoxName.Text = Wiki[currentWiki].GetName();
+                    comboBoxCategory.Text = Wiki[currentWiki].getCategory();
+                    if (Wiki[currentWiki].getStructure() == "Linear")
+                    {
+                        radioButtonHighlight(0);
+                    }
+                    else
+                    {
+                        radioButtonHighlight(1);
+                    }
+                    textBoxDefinition.Text = Wiki[currentWiki].getDefinition();
+
+                    resetHighlight();
                 } 
                 else
                 {
                     MessageBox.Show(textBoxSearch.Text + " was not found.");
+                    Trace.WriteLine(textBoxSearch.Text + " not Found");
                     clearTexts();
                 }
             }
             else
             {
                 MessageBox.Show("Please input a name to search for in the current wiki records.");
+                Trace.WriteLine("No inputs were made in the search box");
             }
         }
 
@@ -334,6 +369,7 @@ namespace WikiApplication
                             openWiki.setDefinition(reader.ReadString());
                             Wiki.Add(openWiki);
                         }
+                        Trace.WriteLine("File opened.");
                     }
                 }
             }
@@ -360,6 +396,7 @@ namespace WikiApplication
             else
             {
                 saveRecord(defaultFileName);
+                Trace.WriteLine("File saved under definitions.bin");
             }
             Trace.WriteLine("Save bin file");
         }
@@ -424,6 +461,7 @@ namespace WikiApplication
         private void textBoxName_DoubleClick(object sender, EventArgs e)
         {
             clearTexts();
+            Trace.WriteLine("Double click text box clear");
         }
 
         // 6.15 The Wiki application will save data when the form closes. 
@@ -433,3 +471,4 @@ namespace WikiApplication
         }
     }
 }
+
